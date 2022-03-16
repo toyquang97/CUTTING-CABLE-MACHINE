@@ -11,32 +11,46 @@
 
 #define _UART_C
 
-
 #include "uart.h"
-
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
- if(huart->Instance == huart1.Instance)
- {
-    readUart();
- }
-}
 
 void readUart(void)
 {
-  HAL_UART_Receive_IT(&PORD,rxData,1);
+    lastReceviceTime = HAL_GetTick() + KeyTimeout;
+    bufferData[countRxByte] = rxData;
+    countRxByte++;
+    totalCountbyte++;
+    HAL_UART_Receive_IT(&PORD, &rxData, 1);
 }
 
-
-float stringToFloat(uint8_t *pData)
+void getLenghtAndQty(void)
 {
-  float number = 0;
-  uint32_t buffer;
-  for (uint8_t i = 0; i < 3; i++)
+  if(HAL_GetTick() > lastReceviceTime)
   {
-    buffer = (pData + i) << (3-i);
+    lastReceviceTime = UINT_MAX;
+    rxData = 0;
+    countRxByte = 0;
+    for(int i = 0; i < 10; i++)
+    {
+      qtyCutData[i] = 0;
+      if(bufferData[i] == 32)
+      {
+        for(int j = 0; j < i; j++)
+        {
+          qtyCutData[j] = bufferData[j];
+        }
+        for(int j = i + 1; j < 10; j++)
+        {
+          leghtCutData[j - i - 1] = bufferData[j];
+        }
+      }
+    }
+    for(int i = 0; i < 10; i++)
+    {
+      bufferData[i] = 0;
+    }
   }
-  
-  return number;
+  leghtRequest = (atof((char*) (leghtCutData))) * 100;
+  quantityRequest = (atoi((char*) qtyCutData));
 }
+
+

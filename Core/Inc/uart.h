@@ -11,14 +11,24 @@
 #ifndef _UART_H_
 #define _UART_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+
+#define KeyTimeout 1500
 
 #ifdef _UART_C
+#include "allHeader.h"
+extern UART_HandleTypeDef huart1;
 #define PORD huart1
-uint8_t bufferData[8];
-uint8_t rxData[8];
-uint8_t txData[8];
+
+
+uint8_t rxData;
+uint8_t bufferData[10];
+uint8_t leghtCutData[6];
+uint8_t qtyCutData[3];
+uint32_t totalCountbyte = 0;
+uint32_t lastReceviceTime = UINT_MAX;
+uint8_t countRxByte;
+uint32_t leghtRequest = 0;
+uint16_t quantityRequest = 0;
 
 
 /**
@@ -36,17 +46,26 @@ void readUart(void);
 void uartSendBuff(uint8_t * pData, uint8_t len);
 
 /**
- * @brief 
+ * @brief get request lenght and quantity
  * 
- * @param pData 
- * @return float 
  */
-float stringToFloat(uint8_t *pData);
+void getLenghtAndQty(void);
 
 #else
-extern uint8_t bufferData[];
-extern uint8_t rxData[8];
-extern uint8_t txData[8];
 
-#endif 
-#endif 
+extern uint8_t rxData;
+extern uint8_t bufferData[10];
+extern uint8_t leghtCutData[6];
+extern uint8_t qtyCutData[3];
+extern uint32_t lastReceviceTime;
+extern uint32_t totalCountbyte;
+extern uint8_t countRxByte;
+extern uint32_t leghtRequest;
+extern uint16_t quantityRequest;
+extern void readUart(void);
+extern void getLenghtAndQty(void);
+extern void uartSendBuff(uint8_t * pData, uint8_t len);
+
+
+#endif
+#endif

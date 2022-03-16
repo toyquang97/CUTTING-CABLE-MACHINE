@@ -12,7 +12,7 @@
 #define _MOTOR_C
 #ifdef _MOTOR_C
 
-#include "motor.h"
+#include "allHeader.h"
 
 Motor_t readStatusMotor(Motor_t *statusMotor){
    //TODO()
@@ -22,4 +22,4 @@ Motor_t readStatusMotor(Motor_t *statusMotor){
 
 
 
-#endif _MOTOR_C
+#endif

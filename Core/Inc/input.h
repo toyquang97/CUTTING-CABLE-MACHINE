@@ -12,8 +12,7 @@
 #ifndef _INPUT_H
 #define _INPUT_H
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <allHeader.h>
 
 /**
  * @brief read status of input digital
@@ -23,7 +22,7 @@
  *                  1 : Push
  *                  2 : Press
  */
-uint8_t readStatusButton(uint8_t pinRead); 
+uint8_t readStateButton(uint8_t pinRead); 
 
 /**
  * @brief read input encoder
@@ -34,4 +33,4 @@ uint32_t readEncoder(void);
 
 
 
-#endif _INPUT_H
+#endif

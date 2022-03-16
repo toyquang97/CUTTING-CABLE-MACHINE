@@ -11,11 +11,13 @@
 *.ilk
 *.map
 *.exp
-
+*.mk
+*.list
 # Precompiled Headers
 *.gch
 *.pch
-
+*.xml
+*.prefs
 # Libraries
 *.lib
 *.a
@@ -50,3 +52,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+Debug

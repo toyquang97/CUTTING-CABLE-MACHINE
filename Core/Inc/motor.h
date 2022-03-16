@@ -11,8 +11,8 @@
 #ifndef _MOTOR_H
 #define _MOTOR_H
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <allHeader.h>
+
 
 typedef enum
 {
@@ -41,7 +41,7 @@ Motor_t readStatusMotor(Motor_t *statusMotor);
  * @param readEncoder 
  * @return uint32_t 
  */
-uint32_t readRealPosition(uint32 readEncoder);
+uint32_t readRealPosition(uint32_t readEncoder);
 
 /**
  * @brief 
@@ -64,5 +64,17 @@ void transformStarToDelta(uint8_t timeTransform);
  */
 void stopMotor(uint32_t positionStop);
 
+/**
+ * @brief 
+ * 
+ */
+void invertMotor(void);
 
-#endif _MOTOR_H
+/**
+ * @brief 
+ * 
+ */
+void returnHome(void);
+
+
+#endif

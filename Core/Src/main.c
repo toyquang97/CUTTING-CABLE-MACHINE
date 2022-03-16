@@ -1,27 +1,27 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "allHeader.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,17 +39,12 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-CAN_HandleTypeDef hcan;
+ CAN_HandleTypeDef hcan;
 
-IWDG_HandleTypeDef hiwdg;
-
-TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
-
-WWDG_HandleTypeDef hwwdg;
 
 /* USER CODE BEGIN PV */
 
@@ -59,11 +54,8 @@ WWDG_HandleTypeDef hwwdg;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN_Init(void);
-static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_IWDG_Init(void);
-static void MX_WWDG_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -71,6 +63,11 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/*-- leghtRequest: lenght of cable will be cut
+     quantityRequest: quantity uints will be cut
+     2 variable use for Binz
+--*/
 
 /* USER CODE END 0 */
 
@@ -103,19 +100,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_CAN_Init();
-  MX_TIM1_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
-  MX_IWDG_Init();
-  MX_WWDG_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim3 , TIM_CHANNEL_ALL);
+
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_UART_Receive_IT(&huart1, &rxData, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  while(1)
   {
     /* USER CODE END WHILE */
 
@@ -136,11 +133,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
@@ -148,6 +144,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -197,80 +194,6 @@ static void MX_CAN_Init(void)
   /* USER CODE BEGIN CAN_Init 2 */
 
   /* USER CODE END CAN_Init 2 */
-
-}
-
-/**
-  * @brief IWDG Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_IWDG_Init(void)
-{
-
-  /* USER CODE BEGIN IWDG_Init 0 */
-
-  /* USER CODE END IWDG_Init 0 */
-
-  /* USER CODE BEGIN IWDG_Init 1 */
-
-  /* USER CODE END IWDG_Init 1 */
-  hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_64;
-  hiwdg.Init.Reload = 4095;
-  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN IWDG_Init 2 */
-
-  /* USER CODE END IWDG_Init 2 */
-
-}
-
-/**
-  * @brief TIM1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM1_Init(void)
-{
-
-  /* USER CODE BEGIN TIM1_Init 0 */
-
-  /* USER CODE END TIM1_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM1_Init 1 */
-
-  /* USER CODE END TIM1_Init 1 */
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 7199;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 99;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM1_Init 2 */
-
-  /* USER CODE END TIM1_Init 2 */
 
 }
 
@@ -402,36 +325,6 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
-  * @brief WWDG Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_WWDG_Init(void)
-{
-
-  /* USER CODE BEGIN WWDG_Init 0 */
-
-  /* USER CODE END WWDG_Init 0 */
-
-  /* USER CODE BEGIN WWDG_Init 1 */
-
-  /* USER CODE END WWDG_Init 1 */
-  hwwdg.Instance = WWDG;
-  hwwdg.Init.Prescaler = WWDG_PRESCALER_8;
-  hwwdg.Init.Window = 127;
-  hwwdg.Init.Counter = 127;
-  hwwdg.Init.EWIMode = WWDG_EWI_DISABLE;
-  if (HAL_WWDG_Init(&hwwdg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN WWDG_Init 2 */
-
-  /* USER CODE END WWDG_Init 2 */
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -502,7 +395,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  while (1)
+  while(1)
   {
   }
   /* USER CODE END Error_Handler_Debug */
@@ -524,4 +417,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

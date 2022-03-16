@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 -include ../makefile.init
@@ -43,14 +43,14 @@ BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ART
 EXECUTABLES += \
 Cab_roling.elf \
 
+MAP_FILES += \
+Cab_roling.map \
+
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
 Cab_roling.list \
-
-OBJCOPY_BIN += \
-Cab_roling.bin \
 
 
 # All Target
@@ -60,8 +60,8 @@ all: main-build
 main-build: Cab_roling.elf secondary-outputs
 
 # Tool invocations
-Cab_roling.elf: $(OBJS) $(USER_OBJS) D:\00.GS_ELEVATOR\PROJECT\STM32\STM32F1\Cab_roling\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Cab_roling.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\00.GS_ELEVATOR\PROJECT\STM32\STM32F1\Cab_roling\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Cab_roling.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Cab_roling.elf Cab_roling.map: $(OBJS) $(USER_OBJS) D:\Task\CUTTING\ MACHINE\CUTTING-CABLE-MACHINE\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Cab_roling.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Task\CUTTING MACHINE\CUTTING-CABLE-MACHINE\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Cab_roling.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -75,17 +75,12 @@ Cab_roling.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Cab_roling.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Cab_roling.bin"
-	@echo 'Finished building: $@'
-	@echo ' '
-
 # Other Targets
 clean:
-	-$(RM) Cab_roling.bin Cab_roling.elf Cab_roling.list default.size.stdout
+	-$(RM) Cab_roling.elf Cab_roling.list Cab_roling.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
