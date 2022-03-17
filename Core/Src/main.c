@@ -64,8 +64,9 @@ static void MX_TIM3_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/*-- leghtRequest: lenght of cable will be cut
-     quantityRequest: quantity uints will be cut
+/*--
+ * leghtRequest: lenght of cable will be cut
+ * quantityRequest: quantity uints will be cut
      2 variable use for Binz
 --*/
 

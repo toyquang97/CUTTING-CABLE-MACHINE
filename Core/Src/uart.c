@@ -34,9 +34,13 @@ void getLenghtAndQty(void)
       qtyCutData[i] = 0;
       if(bufferData[i] == 32)
       {
-        for(int j = 0; j < i; j++)
+        for(uint8_t k = 0; k < i; k++)
         {
-          qtyCutData[j] = bufferData[j];
+          qtyCutData[k] = bufferData[k];
+          if(k == i)
+          {
+            break;
+          }
         }
         for(int j = i + 1; j < 10; j++)
         {
@@ -49,8 +53,15 @@ void getLenghtAndQty(void)
       bufferData[i] = 0;
     }
   }
+  if(totalCountbyte > 255)
+  {
+    totalCountbyte = 0;
+  }
   leghtRequest = (atof((char*) (leghtCutData))) * 100;
   quantityRequest = (atoi((char*) qtyCutData));
 }
 
-
+void uartSendByte(uint8_t * pData, uint8_t len)
+{
+  HAL_UART_Transmit(&PORD, pData, len, 100);
+}

@@ -21,10 +21,10 @@ extern UART_HandleTypeDef huart1;
 
 
 uint8_t rxData;
-uint8_t bufferData[10];
-uint8_t leghtCutData[6];
-uint8_t qtyCutData[3];
-uint32_t totalCountbyte = 0;
+uint8_t bufferData[12];
+uint8_t leghtCutData[10];
+uint8_t qtyCutData[10];
+static uint8_t totalCountbyte = 0;
 uint32_t lastReceviceTime = UINT_MAX;
 uint8_t countRxByte;
 uint32_t leghtRequest = 0;
@@ -43,7 +43,7 @@ void readUart(void);
  * @param pData 
  * @param len 
  */
-void uartSendBuff(uint8_t * pData, uint8_t len);
+void uartSendByte(uint8_t * pData, uint8_t len);
 
 /**
  * @brief get request lenght and quantity
@@ -54,9 +54,9 @@ void getLenghtAndQty(void);
 #else
 
 extern uint8_t rxData;
-extern uint8_t bufferData[10];
-extern uint8_t leghtCutData[6];
-extern uint8_t qtyCutData[3];
+extern uint8_t bufferData[12];
+extern uint8_t leghtCutData[10];
+extern uint8_t qtyCutData[10];
 extern uint32_t lastReceviceTime;
 extern uint32_t totalCountbyte;
 extern uint8_t countRxByte;
@@ -64,7 +64,7 @@ extern uint32_t leghtRequest;
 extern uint16_t quantityRequest;
 extern void readUart(void);
 extern void getLenghtAndQty(void);
-extern void uartSendBuff(uint8_t * pData, uint8_t len);
+extern void uartSendByte(uint8_t * pData, uint8_t len);
 
 
 #endif
