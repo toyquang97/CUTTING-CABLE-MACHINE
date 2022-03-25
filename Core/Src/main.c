@@ -43,6 +43,7 @@
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
 
@@ -57,6 +58,7 @@ static void MX_CAN_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -68,7 +70,19 @@ static void MX_TIM3_Init(void);
  * leghtRequest: lenght of cable will be cut
  * quantityRequest: quantity uints will be cut
      2 variable use for Binz
+
+ * SCALEROTAION define should be change in input.h :
+ * actualMet is variable measure meter reality
 --*/
+
+int _write(int file, char *ptr, int len)
+{
+  /* Implement your write code here, this is used by puts and printf for example */
+  int i=0;
+  for(i=0 ; i<len ; i++)
+    ITM_SendChar((*ptr++));
+  return len;
+}
 
 /* USER CODE END 0 */
 
@@ -104,11 +118,12 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3 , TIM_CHANNEL_ALL);
-
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
+  HAL_TIM_Base_Start_IT(&htim4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,6 +133,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
@@ -293,6 +309,51 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 7199;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 19;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -366,11 +427,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(MISO_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : IC_IN1_Pin IC_IN2_Pin IC_IN3_Pin IC_IN11_Pin
-                           IC_IN12_Pin IC_IN13_Pin IC_IN14_Pin IC_IN4_Pin
-                           IC_IN9_Pin IC_IN10_Pin */
+                           IC_IN12_Pin IC_IN13_Pin IC_IN14_Pin IC_IN9_Pin
+                           IC_IN10_Pin */
   GPIO_InitStruct.Pin = IC_IN1_Pin|IC_IN2_Pin|IC_IN3_Pin|IC_IN11_Pin
-                          |IC_IN12_Pin|IC_IN13_Pin|IC_IN14_Pin|IC_IN4_Pin
-                          |IC_IN9_Pin|IC_IN10_Pin;
+                          |IC_IN12_Pin|IC_IN13_Pin|IC_IN14_Pin|IC_IN9_Pin
+                          |IC_IN10_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

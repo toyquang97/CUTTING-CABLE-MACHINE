@@ -20,9 +20,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  if(htim->Instance == htim2.Instance)
-  {
-     getLenghtAndQty();
-  }
+ {
+	if (htim->Instance == htim2.Instance) {
+		getLenghtAndQty();
+	}
+	if (htim->Instance == htim4.Instance) {
+		getRealPulseEncoder = getRealPulsePosition();
+		actualMet = convertRotationToMet(countTimeRotation, getRealPulseEncoder);
+	}
 }

@@ -95,8 +95,6 @@ void Error_Handler(void);
 #define UART_DE_GPIO_Port GPIOA
 #define HC166_SEL_Pin GPIO_PIN_15
 #define HC166_SEL_GPIO_Port GPIOA
-#define IC_IN4_Pin GPIO_PIN_3
-#define IC_IN4_GPIO_Port GPIOB
 #define IC_IN9_Pin GPIO_PIN_8
 #define IC_IN9_GPIO_Port GPIOB
 #define IC_IN10_Pin GPIO_PIN_9
