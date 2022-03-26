@@ -73,6 +73,7 @@ static void MX_TIM4_Init(void);
 
  * SCALEROTAION define should be change in input.h :
  * actualMet is variable measure meter reality
+ * speedEncoderRPM is variale to measure speed of encoder
 --*/
 
 int _write(int file, char *ptr, int len)
