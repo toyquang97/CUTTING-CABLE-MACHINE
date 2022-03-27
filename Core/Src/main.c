@@ -36,6 +36,16 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
+#define SP 0x5000
+#define VP 0x1003
+#define PAUSE 1
+#define STATIC 3
+#define HIDE 2
+#define NORMAL 0
+
+
+#define RED 0XF800
+#define WHITE 0xFFFF
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -76,6 +86,11 @@ static void MX_TIM4_Init(void);
  * speedEncoderRPM is variale to measure speed of encoder
 --*/
 
+
+char Textmessage[55]= "Welcome to Zeit Elevator!";
+char TextErrmessage[55]= "ERROR_EMERGENCY";
+uint8_t buf[100] = {0};
+
 int _write(int file, char *ptr, int len)
 {
   /* Implement your write code here, this is used by puts and printf for example */
@@ -85,6 +100,68 @@ int _write(int file, char *ptr, int len)
   return len;
 }
 
+
+int Dwin_Write_VP(uint16_t Addr,uint8_t *data,uint16_t len)
+{
+	uint8_t DwinBuf[100];
+	DwinBuf[0] = 0x5A;
+	DwinBuf[1] = 0xA5;
+	DwinBuf[2] = 2*len + 1;  //
+	DwinBuf[3] = 0x82;
+	DwinBuf[4] = Addr>>8;
+	DwinBuf[5] = Addr;
+	for(int i=0;i<len;i++)
+	{
+		DwinBuf[6+i] = data[i];
+	}
+    len = 2*len + 4;
+    HAL_UART_Transmit(&huart1, DwinBuf, len, 100);
+	return 1;
+}
+
+void changeColor(uint16_t sp, uint16_t color)
+{
+	  uint8_t bufferColor[2] = {0};
+    bufferColor[0]        = color >> 8;
+    bufferColor[1]        = color;
+    Dwin_Write_VP(sp + 3, bufferColor,2);
+}
+
+void changModeRollText(uint16_t sp, uint16_t mode)
+{
+  uint8_t bufferColor[2] = {0};
+  bufferColor[0]         = mode >> 8;
+  bufferColor[1]         = mode;
+  Dwin_Write_VP(sp + 2, bufferColor,2);
+}
+
+void middleRollText(uint16_t sp, uint8_t mode)
+{
+  Dwin_Write_VP(sp + 2, &mode,2);
+}
+void roll(void)
+{
+  changeColor(SP,WHITE);
+	for (int i = 0; i <= sizeof(Textmessage); i++)
+	{
+		buf[2*i+1] = Textmessage[i];
+	}
+	Dwin_Write_VP(VP,buf,55);
+  changModeRollText(SP,NORMAL);
+}
+
+
+void SHOW(void)
+{
+  changModeRollText(SP,STATIC);
+  middleRollText(SP,2); // middle
+  changeColor(SP,RED);
+	for (int i = 0; i <= sizeof(Textmessage); i++)
+	{
+		buf[2*i+1] = TextErrmessage[i];
+	}
+	Dwin_Write_VP(VP,buf,55);
+}
 /* USER CODE END 0 */
 
 /**
@@ -125,6 +202,28 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
   HAL_TIM_Base_Start_IT(&htim4);
+
+  
+ 
+  // roll();
+  // HAL_Delay(10000);
+
+  // SHOW();
+  // HAL_Delay(5000);
+
+
+  // roll();
+
+
+
+roll();
+HAL_Delay(10000);
+SHOW();
+HAL_Delay(5000);
+
+
+roll();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

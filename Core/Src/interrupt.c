@@ -15,7 +15,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
  if(huart->Instance == huart1.Instance)
  {
-    readUart();
+    //readUart();
  }
 }
 
