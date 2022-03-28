@@ -17,7 +17,7 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -31,6 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -85,6 +86,8 @@ int _write(int file, char *ptr, int len)
   return len;
 }
 
+
+
 /* USER CODE END 0 */
 
 /**
@@ -125,6 +128,18 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
   HAL_TIM_Base_Start_IT(&htim4);
+  initOutput();
+
+  __EN_XFAN;
+  HAL_Delay(5000);
+
+  __DIS_XFAN;
+
+  __EN_XB11;
+
+  HAL_Delay(5000);
+
+  __DIS_XB11;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -134,6 +149,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 
   }
   /* USER CODE END 3 */

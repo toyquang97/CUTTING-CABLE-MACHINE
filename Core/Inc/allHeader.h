@@ -15,5 +15,6 @@
 #include "motor.h"
 #include "stdint.h"
 #include "stdio.h"
+#include "output.h"
 
 #endif /* INC_ALLHEADER_H_ */

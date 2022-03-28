@@ -28,5 +28,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		getRealPulseEncoder = getRealPulsePosition();
 		actualMet = convertRotationToMet(countTimeRotation, getRealPulseEncoder);
 		speedEncoderRPM = getSpeedRPM(getRealPulseEncoder);
+		//outputState(outData);
+		outputState(outputData);
 	}
 }
