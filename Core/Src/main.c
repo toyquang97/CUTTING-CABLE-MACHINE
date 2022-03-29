@@ -36,6 +36,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
+#define PC13_OUT (*(volatile uint32_t *)0x422201B4)
+
+
 #define SP 0x5000
 #define VP 0x1003
 #define PAUSE 1
@@ -52,7 +55,6 @@
  CAN_HandleTypeDef hcan;
 
 TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
@@ -67,9 +69,9 @@ static void MX_GPIO_Init(void);
 static void MX_CAN_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
+
 
 /* USER CODE END PFP */
 
@@ -86,7 +88,7 @@ static void MX_TIM4_Init(void);
  * speedEncoderRPM is variale to measure speed of encoder
 --*/
 
-
+uint32_t test ;
 char Textmessage[55]= "Welcome to Zeit Elevator!";
 char TextErrmessage[55]= "ERROR_EMERGENCY";
 uint8_t buf[100] = {0};
@@ -195,15 +197,15 @@ int main(void)
   MX_CAN_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
-  MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Encoder_Start(&htim3 , TIM_CHANNEL_ALL);
+  //HAL_TIM_Encoder_Start(&htim3 , TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
   HAL_TIM_Base_Start_IT(&htim4);
+  test  = 0x42000000 + (uint32_t)(&GPIOC->ODR)*32 + 13*4;
 
-  
+  PC13_OUT = 1;
  
   // roll();
   // HAL_Delay(10000);
@@ -360,55 +362,6 @@ static void MX_TIM2_Init(void)
 }
 
 /**
-  * @brief TIM3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM3_Init(void)
-{
-
-  /* USER CODE BEGIN TIM3_Init 0 */
-
-  /* USER CODE END TIM3_Init 0 */
-
-  TIM_Encoder_InitTypeDef sConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM3_Init 1 */
-
-  /* USER CODE END TIM3_Init 1 */
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
-  if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM3_Init 2 */
-
-  /* USER CODE END TIM3_Init 2 */
-
-}
-
-/**
   * @brief TIM4 Initialization Function
   * @param None
   * @retval None
@@ -527,11 +480,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(MISO_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : IC_IN1_Pin IC_IN2_Pin IC_IN3_Pin IC_IN11_Pin
-                           IC_IN12_Pin IC_IN13_Pin IC_IN14_Pin IC_IN9_Pin
-                           IC_IN10_Pin */
+                           IC_IN12_Pin IC_IN13_Pin IC_IN14_Pin IC_IN4_Pin
+                           IC_IN5_Pin IC_IN6_Pin IC_IN7_Pin IC_IN8_Pin
+                           IC_IN9_Pin IC_IN10_Pin */
   GPIO_InitStruct.Pin = IC_IN1_Pin|IC_IN2_Pin|IC_IN3_Pin|IC_IN11_Pin
-                          |IC_IN12_Pin|IC_IN13_Pin|IC_IN14_Pin|IC_IN9_Pin
-                          |IC_IN10_Pin;
+                          |IC_IN12_Pin|IC_IN13_Pin|IC_IN14_Pin|IC_IN4_Pin
+                          |IC_IN5_Pin|IC_IN6_Pin|IC_IN7_Pin|IC_IN8_Pin
+                          |IC_IN9_Pin|IC_IN10_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
