@@ -21,7 +21,7 @@
 int16_t     getRealPulseEncoder = 0;
 int16_t     getPosition         = 0;
 uint32_t    realPulse           = 0;
-uint8_t     countTimeRotation   = 0;
+uint16_t     countTimeRotation  = 0;
 int16_t     positionDirective   = 0;
 int16_t     speedEncoderRPM     = 0;
 float       actualMet           = 0;
@@ -49,7 +49,7 @@ int32_t readEncoder(void);
 /** @brief convert to MET
  *
  */
-float convertRotationToMet(uint8_t counterRotation,int16_t pulseEncoder);
+float convertRotationToMet(uint16_t counterRotation,int16_t pulseEncoder);
 
 /** @brief get how many time encoder was rotate
  *
@@ -71,12 +71,12 @@ extern int16_t positionDirective;
 extern int16_t speedEncoderRPM;
 extern int32_t realPulse;
 extern uint8_t ratioScale;
-extern uint8_t countTimeRotation;
+extern uint16_t countTimeRotation;
 extern float   actualMet;
 extern int32_t readEncoder(void);
 extern int16_t getRealPulsePosition(void);
 extern uint8_t getCountTimeRotation(int16_t pulseEncoder);
-extern float   convertRotationToMet(uint8_t counterRotation,int16_t pulseEncoder);
+extern float   convertRotationToMet(uint16_t counterRotation,int16_t pulseEncoder);
 extern int16_t getSpeedRPM(int16_t positionEncoder);
 #endif
 #endif
