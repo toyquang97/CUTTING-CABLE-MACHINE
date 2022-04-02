@@ -33,7 +33,7 @@ int16_t getRealPulsePosition(void)
 	return getPosition;
 }
 
-float convertRotationToMet(uint8_t counterRotation, int16_t pulseEncoder)
+float convertRotationToMet(uint16_t counterRotation, int16_t pulseEncoder)
 {
 	float actualPosition = 0;
 	actualPosition = (counterRotation + (float)(pulseEncoder / 1000)) / SCALEROTATION;
